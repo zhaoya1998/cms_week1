@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhaoya.senior1.week1.dao.GoodsMapper">
+	<resultMap type="goods" id="goodsMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="ename" column="ename" />
+		<result property="bid" column="bid" />
+		<result property="tid" column="tid" />
+		<result property="size" column="size" />
+		<result property="price" column="price" />
+		<result property="num" column="num" />
+		<result property="tab" column="tab" />
+		<result property="pic" column="pic" />
+
+		<association property="brand" javaType="brand">
+			<id property="id" column="id" />
+			<result property="name" column="name" />
+		</association>
+
+
+		<association property="type" javaType="type">
+			<id property="id" column="id" />
+			<result property="name" column="name" />
+		</association>
+	</resultMap>
+
+	<select id="getGoodsList" resultMap="goodsMap">
+		select a.*,b.`name`,c.`name` from tb_goods a LEFT JOIN tb_brand b on
+		a.bid
+		=b.id LEFT JOIN tb_type c on a.tid =c.id
+		<where>
+			a.status=0
+			<if test="null !=name and name !=''">
+				and a.name like '%${name}%'
+			</if>
+
+		</where>
+
+	</select>
+
+	<insert id="insert">
+		insert into tb_goods set
+		name=#{name},ename=#{ename},bid=#{bid},tid=#{tid},size=#{size},price=#{price},num=#{num},tab=#{tab},pic=#{pic}
+	</insert>
+
+	<select id="getBrandList" resultType="brand">
+		select * from tb_brand
+	</select>
+
+	<select id="getTypeList" resultType="type">
+		select * from tb_type
+	</select>
+
+	<select id="look" resultMap="goodsMap">
+		select a.*,b.`name`,c.`name` from
+		tb_goods a LEFT JOIN tb_brand b on a.bid
+		=b.id LEFT JOIN tb_type c on
+		a.tid =c.id where a.id=#{id}
+	</select>
+
+	<delete id="del">
+		update tb_goods set status=1 where id=#{id}
+	</delete>
+
+	<select id="getGoodsListById" resultMap="goodsMap">
+		select
+		a.*,b.`name`,c.`name` from
+		tb_goods a LEFT JOIN tb_brand b on a.bid
+		=b.id LEFT JOIN tb_type c on
+		a.tid =c.id where a.id=#{id}
+	</select>
+
+	<update id="update">
+		update tb_goods set
+		name=#{name},ename=#{ename},bid=#{bid},tid=#{tid},size=#{size},price=#{price},num=#{num},tab=#{tab},pic=#{pic}
+		where id=#{id}
+	</update>
+</mapper>
